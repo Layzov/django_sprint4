@@ -10,24 +10,18 @@ User = get_user_model()
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', )
+        fields = ('first_name', 'last_name', 'username', 'email', )
 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ['author', 'is_published']
+        exclude = ['author']
         widgets = {
-            'pub_date': forms.DateTimeInput(attrs={'type': 'datetime-local'})
+            'pub_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'is_published': forms.CheckboxInput(),
         }
 
-    # def clean_pub_date(self):
-    #     pub_date = self.cleaned_data['pub_date']
-
-    #     if pub_date < timezone.now():
-    #         self.add_error('pub_date', 'Дата не может быть в прошлом')
-
-    #     return pub_date
 
 
 class CommentForm(forms.ModelForm):

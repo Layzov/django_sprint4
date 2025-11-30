@@ -54,6 +54,7 @@ class PostDetailView(DetailView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
 
+        # Оригинальная логика - оставляем как было
         if self.request.user.is_authenticated and obj.author == self.request.user:
             return obj
 
@@ -192,15 +193,10 @@ class UserProfileDetailView(DetailView):
         return context
 
 
-class UserProfileEditView(UpdateView):
+class UserProfileEditView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserForm
     template_name = 'blog/user.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            raise Http404
-        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('blog:profile', kwargs={'username': self.request.user.username})
